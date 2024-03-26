@@ -15,8 +15,6 @@ altair==5.2.0
 
 amazoncaptcha==0.5.11
 
-anaconda-client==1.11.2
-
 anaconda-navigator==2.4.0
 
 
