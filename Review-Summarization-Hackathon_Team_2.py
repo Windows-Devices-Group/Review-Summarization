@@ -20,8 +20,8 @@ import streamlit as st
 
 
 # Setup environment variables for API keys and endpoint
-os.environ["AZURE_OPENAI_API_KEY"] = "dbf39ef832a64946afc7197062d74c1d"
-os.environ["AZURE_OPENAI_ENDPOINT"] = "https://hackteam2-gpt35turbo-16k.openai.azure.com/"
+os.environ["AZURE_OPENAI_API_KEY"] = "a121608bfa654d7bbb4ff9718ecba306"
+os.environ["AZURE_OPENAI_ENDPOINT"] = "https://hulk-openai.openai.azure.com/"
 
 # Function to read text from file
 def get_text_from_file(txt_file):
@@ -37,7 +37,7 @@ def get_text_chunks(text):
 
 # Function to create and store embeddings
 def get_vector_store(text_chunks):
-    embeddings = AzureOpenAIEmbeddings(azure_endpoint="https://hackteam2gpt35t.openai.azure.com/",api_key="fc0b4df99f904289b84be9b1acb092cf", azure_deployment="hackteam2embedding")
+    embeddings = AzureOpenAIEmbeddings(azure_deployment="Embedding-Model")
     vector_store = FAISS.from_texts(text_chunks, embedding=embeddings)
     vector_store.save_local("faiss_index_new")
     return vector_store
@@ -59,8 +59,8 @@ def get_conversational_chain():
 
     Answer:
     """
-    model = AzureChatOpenAI(azure_endpoint="https://hackteam2-gpt35turbo-16k.openai.azure.com/", api_key="dbf39ef832a64946afc7197062d74c1d",
-    azure_deployment="HackathonTeam2",
+    model = AzureChatOpenAI(
+    azure_deployment="Verbatim-Synthesis",
     api_version='2023-12-01-preview')
     prompt = PromptTemplate(template=prompt_template, input_variables=["context", "question"])
     chain = load_qa_chain(model, chain_type="stuff", prompt=prompt)
@@ -68,7 +68,7 @@ def get_conversational_chain():
 
 # Function to handle user queries using the existing vector store
 def query(user_question, vector_store_path="faiss_index_new"):
-    embeddings = AzureOpenAIEmbeddings(azure_endpoint="https://hackteam2gpt35t.openai.azure.com/",api_key="fc0b4df99f904289b84be9b1acb092cf", azure_deployment="hackteam2embedding")
+    embeddings = AzureOpenAIEmbeddings(azure_deployment="Embedding-Model")
     vector_store = FAISS.load_local(vector_store_path, embeddings, allow_dangerous_deserialization=True)
     chain = get_conversational_chain()
     docs = vector_store.similarity_search(user_question)
