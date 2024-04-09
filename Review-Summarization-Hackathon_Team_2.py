@@ -20,8 +20,8 @@ import streamlit as st
 
 
 # Setup environment variables for API keys and endpoint
-os.environ["AZURE_OPENAI_API_KEY"] = "a121608bfa654d7bbb4ff9718ecba306"
-os.environ["AZURE_OPENAI_ENDPOINT"] = "https://hulk-openai.openai.azure.com/"
+os.environ["AZURE_OPENAI_API_KEY"] = "251bab4a00c6407c9edb695c5f450a5d"
+os.environ["AZURE_OPENAI_ENDPOINT"] = "https://surface-llm-poc.openai.azure.com/"
 
 # Function to read text from file
 def get_text_from_file(txt_file):
@@ -37,7 +37,7 @@ def get_text_chunks(text):
 
 # Function to create and store embeddings
 def get_vector_store(text_chunks):
-    embeddings = AzureOpenAIEmbeddings(azure_deployment="Embedding-Model")
+    embeddings = AzureOpenAIEmbeddings(azure_deployment="Large_Embeddings")
     vector_store = FAISS.from_texts(text_chunks, embedding=embeddings)
     vector_store.save_local("faiss_index_new")
     return vector_store
@@ -60,7 +60,7 @@ def get_conversational_chain():
     Answer:
     """
     model = AzureChatOpenAI(
-    azure_deployment="Verbatim-Synthesis",
+    azure_deployment="SurfaceLLM",
     api_version='2023-12-01-preview')
     prompt = PromptTemplate(template=prompt_template, input_variables=["context", "question"])
     chain = load_qa_chain(model, chain_type="stuff", prompt=prompt)
